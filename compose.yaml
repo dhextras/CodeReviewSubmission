@@ -16,22 +16,22 @@ services:
     secrets:
       - source: code-review-secrets
         target: /app/secrets.yaml
+      - source: ssh-key
+        target: /root/.ssh/id_ed25519
   db:
     image: mysql
     environment:
       MYSQL_DATABASE: codereview
       MYSQL_USER: codereviewuser
       MYSQL_PASSWORD: testpassword
-      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_HOST: "%"
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    ports:
-      - '3306:3306'
     expose:
-      - '3306'
+      - "3306"
     volumes:
       - code-review-db:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 1s
       interval: 1s
       retries: 10
@@ -41,5 +41,7 @@ configs:
 secrets:
   code-review-secrets:
     file: ./secrets.yaml
+  ssh-key:
+    file: ~/.ssh/id_ed25519
 volumes:
   code-review-db:
